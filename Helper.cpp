@@ -61,16 +61,16 @@ RGBA WallColor(wchar_t wallType, bool darkSide)
 	switch (wallType)
 	{
 	case L'1':
-		base = {115, 12, 12};
+		base = {115, 12, 12, 255};
 		break; // Congealed / Dried Blood Red
 	case L'2':
-		base = {35, 18, 55};
+		base = {35, 18, 55, 255};
 		break; // Bruised Shadow / Void Purple
 	case L'3':
-		base = {45, 60, 15};
+		base = {45, 60, 15, 255};
 		break; // Toxic Waste Sludge Green
 	default:
-		base = {55, 48, 45};
+		base = {55, 48, 45, 255};
 		break; // Scorched Iron / Dried Rust	}
 
 		if (darkSide)
@@ -117,7 +117,7 @@ inline void TryMovePlayer(Vec2f &pos, float dx, float dy, std::wstring &map,
 	}
 }
 
-void DoMovement(bool &running, Player &player, bool &miniMapToggle,
+void ProcessInputs(bool &running, Player &player, bool &miniMapToggle,
 				bool &minimapKeyHeld, float dt, std::wstring &map,
 				const int mapwidth, const int mapheight)
 {

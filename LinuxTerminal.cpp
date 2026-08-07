@@ -1,6 +1,7 @@
 #include "LinuxTerminal.h"
 #include <charconv>
 #include <csignal>
+#include <cstring>
 #include <fcntl.h>
 
 // write() is allowed to send fewer bytes than asked (this is explicit in
@@ -41,9 +42,12 @@ void LinuxTerminal::EnableRawMode()
 	write(STDOUT_FILENO, hide_cursor, 6);
 }
 
+
 void LinuxTerminal::DisableRawMode()
 {
-	std::cout << "\x1b[?25h"; // Show cursor
+	// Reverse of EnableRawMode's setup: show cursor, leave alt screen.
+	const char *teardown = "\x1b[?25h\x1b[?1049l";
+	WriteAll(STDOUT_FILENO, teardown, strlen(teardown));
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &s_OrigTermios);
 }
 
@@ -189,19 +193,17 @@ LinuxTerminal::LinuxTerminal()
 void LinuxTerminal::LinuxTerminalClose(bool rawModeEnabled)
 {
 	if (rawModeEnabled)
-	{
-		// Safe alternative to std::cout << "\x1b[?25h" << std::flush, says
-		// gemini;
-		const char *show_cursor = "\x1b[?25h";
-		write(STDOUT_FILENO, show_cursor, 6);
-
-		// Restore the original terminal flags
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, &s_OrigTermios);
-	}
+		DisableRawMode();
 }
 termios_t &LinuxTerminal::GetTermiosRef()
 {
 	return s_OrigTermios;
+}
+
+static void WriteIgnoreResult(int fd, const char *data, size_t len)
+{
+	ssize_t ignored = write(fd, data, len);
+	(void)ignored;
 }
 
 void LinuxTerminal::CrashHandler(int signum)
@@ -210,8 +212,8 @@ void LinuxTerminal::CrashHandler(int signum)
 
 	if (signum == SIGSEGV)
 	{
-		const char *msg = "\n[CRASH] Segmentation Fault detected!\n";
-		write(STDERR_FILENO, msg, 37);
+		const char *msg = "\n[CRASH] Segmentation fault detected!\n";
+		WriteIgnoreResult(STDERR_FILENO, msg, strlen(msg));
 	}
 
 	_Exit(signum);

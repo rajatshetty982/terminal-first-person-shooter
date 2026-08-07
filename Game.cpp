@@ -115,7 +115,7 @@ void Game::Run()
 			terminal.SetScreenResized(false);
 		}
 
-		DoMovement(m_Running, m_Player, m_ShowMiniMap, m_MinimapKeyHeld, dt,
+		ProcessInputs(m_Running, m_Player, m_ShowMiniMap, m_MinimapKeyHeld, dt,
 				   m_Map, c_MapWidth, c_MapHeight);
 
 		// clear the screen before drawing
@@ -197,8 +197,8 @@ RayHit castRay(float rayAngle, Vec2f pos, float maxDepth, std::wstring &map, Vec
 	int mapX = (int)pos.x;
 	int mapY = (int)pos.y;
 
-	float deltaDistX = (rayAngle == 0.0f) ? INFINITY : fabsf(1.0f / rayDirX);
-	float deltaDistY = (rayAngle == 0.0f) ? INFINITY : fabsf(1.0f / rayDirY);
+	float deltaDistX = (rayDirX == 0.0f) ? INFINITY : fabsf(1.0f / rayDirX);
+	float deltaDistY = (rayDirY == 0.0f) ? INFINITY : fabsf(1.0f / rayDirY);
 
 	int stepX, stepY;
 	float sideDistX, sideDistY;
@@ -221,7 +221,7 @@ RayHit castRay(float rayAngle, Vec2f pos, float maxDepth, std::wstring &map, Vec
 	}
 	else
 	{
-		stepX = 1;
+		stepY = 1;
 		sideDistY = (mapY + 1.0f - pos.y) * deltaDistY;
 	}
 
@@ -305,10 +305,10 @@ void Game::RenderColumn(int x)
 	if (rayHitPoint.isEdge)
 		wallColor = LerpRGB(RGBA{0, 0, 0, 255}, wallColor, 0.45f);
 
-	const RGBA skyNear{40, 50, 90};
-	const RGBA skyFar{8, 8, 20};
-	const RGBA floorNear{90, 80, 60};
-	const RGBA floorFar{15, 14, 12};
+	const RGBA skyNear{40, 50, 90, 255};
+	const RGBA skyFar{8, 8, 20, 255};
+	const RGBA floorNear{90, 80, 60, 255};
+	const RGBA floorFar{15, 14, 12, 255};
 
 	for (int y = 0; y < m_WinHeight; ++y)
 	{

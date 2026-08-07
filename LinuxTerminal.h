@@ -16,7 +16,7 @@ class LinuxTerminal
 	LinuxTerminal();
 	~LinuxTerminal();
 	void EnableRawMode();
-	void DisableRawMode();
+	static void DisableRawMode();
 	void DrawFrame(const std::vector<Cell> &screen, int width, int height);
 	void DrawText(std::vector<Cell> &screen, int screenWidth, int screenHeight,
 				  int startX, int startY, const std::string &text, RGBA color);

@@ -53,11 +53,7 @@ inline void TryMovePlayer(Vec2f &pos, float dx, float dy,
 float Clamp(float v, float lo, float hi);
 RGBA LerpRGB(const RGBA &a, const RGBA &b, float t);
 
-static inline bool collided(Vec2f pos, std::wstring &map, int mapWidth,
-							int mapHeight);
-static bool IsWallTile(wchar_t tile);
-
-void DoMovement(bool &running, Player &player, bool &miniMapToggle,
+void ProcessInputs(bool &running, Player &player, bool &miniMapToggle,
 				bool &minimapKeyHeld, float dt, std::wstring &map,
 				const int mapWidth, const int mapHeight);
 
