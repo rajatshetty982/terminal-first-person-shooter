@@ -38,7 +38,7 @@ void Game::SetScreenToTerminalSize(int *width, int *height)
 void Game::Init()
 {
 	// std::ios::sync_with_stdio(false);
-	// Syncs the program's runtime encoding to your Linux system's native UTF-8
+	// Syncs the program's runtime encoding to the Linux system's native UTF-8
 	// locale
 	std::setlocale(LC_ALL, "");
 
@@ -123,13 +123,11 @@ void Game::Run()
 		// std::fill(screen.begin(), screen.end(), " "); // no need ig, looks
 		// clean to me, maybe will test properly later
 
-		// now the main part
 		// we cast our rays at every column (along the x axis)
 		// and check if it hits a wall (i.e. the char '#' from our map)
 		// when it does hit, get the distance from the plyaer to the wall and
 		// render the specific text for the wall/sky/floor according to the
 		// distance
-		// seems simple!!!
 
 		// ---- render ----
 		auto tRayStart = std::chrono::steady_clock::now();
